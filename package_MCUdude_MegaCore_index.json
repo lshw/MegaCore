@@ -292,6 +292,49 @@
             }
           ],
           "toolsDependencies": []
+        },
+        {
+          "name": "MegaCore",
+          "architecture": "avr",
+          "version": "2.0.4",
+          "category": "Contributed",
+          "url": "https://MCUdude.github.io/MegaCore/MegaCore-2.0.4.tar.bz2",
+          "archiveFileName": "MegaCore-2.0.4.tar.bz2",
+          "checksum": "SHA-256:90b1cf4cd4bf3c71f862f3e40ec6adb62795b07c0bcd16d28b236e32e8b2d4fe",
+          "size": "677603",
+          "boards": [
+            {
+              "name": "ATmega2561"
+            },
+            {
+              "name": "ATmega2560"
+            },
+            {
+              "name": "ATmega1281"
+            },
+            {
+              "name": "ATmega1280"
+            },
+            {
+              "name": "ATmega640"
+            },
+            {
+              "name": "ATmega128"
+            },
+            {
+              "name": "ATmega64"
+            },
+            {
+              "name": "AT90CAN128"
+            },
+            {
+              "name": "AT90CAN64"
+            },
+            {
+              "name": "AT90CAN32"
+            }
+          ],
+          "toolsDependencies": []
         }
       ],
       "tools": []
