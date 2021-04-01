@@ -376,6 +376,5 @@ const uint8_t PROGMEM digital_pin_to_timer_PGM[] = {
 #define SERIAL_PORT_HARDWARE_OPEN   Serial1
 #define SERIAL_PORT_HARDWARE1       Serial1
 #define SERIAL_PORT_HARDWARE_OPEN1  Serial1
-#endif
 
 #endif
