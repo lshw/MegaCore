@@ -15,8 +15,8 @@ If you're into "pure" AVR programming, I'm happy to tell you that all relevant k
 * [Printf support](#printf-support)
 * [Pin macros](#pin-macros)
 * [PROGMEM with flash sizes greater than 64kB](#progmem-with-flash-sizes-greater-than-64kb)
-* [Programmers](#programmers)
 * [Write to own flash](#write-to-own-flash)
+* [Programmers](#programmers)
 * **[How to install](#how-to-install)**
   - [Boards Manager Installation](#boards-manager-installation)
   - [Manual Installation](#manual-installation)
@@ -57,8 +57,8 @@ Can't decide what microcontroller to choose? Have a look at the specification ta
 
 ## Supported clock frequencies
 
-MegaCore supports a variety of different clock frequencies. Select the microcontroller in the boards menu, then select the clock frequency. You'll have to hit "Burn bootloader" in order to set the correct fuses and upload the correct bootloader.  
-Make sure you connect an ISP programmer, and select the correct one in the "Programmers" menu. For time critical operations an external crystal/oscillator is recommended.  
+MegaCore supports a variety of different clock frequencies. Select the microcontroller in the boards menu, then select the clock frequency. You'll have to hit "Burn bootloader" in order to set the correct fuses and upload the correct bootloader.
+Make sure you connect an ISP programmer, and select the correct one in the "Programmers" menu. For time critical operations an external crystal/oscillator is recommended.
 
 You might experience upload issues when using the internal oscillator. It's factory calibrated but may be a little "off" depending on the calibration, ambient temperature and operating voltage. If uploading failes while using the 8 MHz internal oscillator you have these options:
 * Edit the baudrate line in the [boards.txt](https://github.com/MCUdude/MegaCore/blob/6098efe55de668ebb19f538a0b86a2c43e3dec07/avr/boards.txt#L802) file, and choose either 115200, 57600, 38400 or 19200 baud.
@@ -136,7 +136,7 @@ digitalWrite(0, HIGH);
 ```
 
 ## PROGMEM with flash sizes greater than 64kB
-The usual `PROGMEM` attribute stores constant data such as string arrays to flash and is great if you want to preserve the precious RAM. However, PROGMEM will only store content in the lower section, from 0 and up to 64kB. If you want to store data in other sections, you can use `PROGMEM1` (64 - 128kB), `PROGMEM2` (128 - 192kB), or `PROGMEM3` (192 - 256kB), depending on the chip you're using.  
+The usual `PROGMEM` attribute stores constant data such as string arrays to flash and is great if you want to preserve the precious RAM. However, PROGMEM will only store content in the lower section, from 0 and up to 64kB. If you want to store data in other sections, you can use `PROGMEM1` (64 - 128kB), `PROGMEM2` (128 - 192kB), or `PROGMEM3` (192 - 256kB), depending on the chip you're using.
 Accessing this data is not as straight forward as with `PROGMEM`, but it's still doable:
 
 ```c
@@ -173,17 +173,17 @@ void print_progmem()
 ```
 
 
-## Programmers
-MegaCore does not adds its own copies of all the standard programmers to the "Programmer" menu. Just select one of the stock programmers in the "Programmers" menu, and you're ready to "Burn Bootloader" or "Upload Using Programmer".
+## Write to own flash
+MegaCore uses Optiboot Flash, a bootloader that supports flash writing within the running application, thanks to the work of [@majekw](https://github.com/majekw).
+This means that content from e.g. a sensor can be stored in the flash memory directly without the need of external memory. Flash memory is much faster than EEPROM, and can handle at least 10 000 write cycles before wear becomes an issue.
+For more information on how it works and how you can use this in you own application, check out the [Serial_read_write](https://github.com/MCUdude/MegaCore/blob/master/avr/libraries/Optiboot_flasher/examples/Serial_read_write/Serial_read_write.ino) for a simple proof-of-concept demo, and
+[Flash_put_get](https://github.com/MCUdude/MegaCore/blob/master/avr/libraries/Optiboot_flasher/examples/Flash_put_get/Flash_put_get.ino) + [Flash_iterate](https://github.com/MCUdude/MegaCore/blob/master/avr/libraries/Optiboot_flasher/examples/Flash_iterate/Flash_iterate.ino) for useful examples on how you can store strings, structs and variables to flash and retrieve then afterwards.
+The [Read_write_without_buffer](https://github.com/MCUdude/MegaCore/blob/master/avr/libraries/Optiboot_flasher/examples/Read_write_without_buffer/Read_write_without_buffer.ino) example demonstrate how you can read and write to the flash memory on a lower level without using a RAM buffer.
 
+
+## Programmers
 Select your microcontroller in the boards menu, then select the clock frequency. You'll have to hit "Burn bootloader" in order to set the correct fuses and upload the correct bootloader. <br/>
 Make sure you connect an ISP programmer, and select the correct one in the "Programmers" menu. For time critical operations an external oscillator is recommended.
-
-
-## Write to own flash
-MegaCore implements [@majekw's fork of Optiboot](https://github.com/majekw/optiboot), which enables flash writing functionality within the running application. This means that content from e.g. a sensor can be stored in the flash memory directly, without the need of externa memory. Flash memory is much faster than EEPROM, and can handle about 10 000 write cycles.
-
-Please check out the [Optiboot flasher example](https://github.com/MCUdude/MegaCore/blob/9793029aea382b41fc5dd81aa8af909fbf244026/avr/libraries/Optiboot_flasher/examples/SerialReadWrite/SerialReadWrite.ino) for more info about how this feature works, and how you can use it with your MegaCore compatible microcontroller.
 
 
 ## How to install
@@ -203,7 +203,7 @@ Click on the "Download ZIP" button in the upper right corner. Extract the ZIP fi
 Open Arduino IDE, and a new category in the boards menu called "MegaCore" will show up.
 
 #### PlatformIO
-[PlatformIO](http://platformio.org) is an open source ecosystem for IoT development and supports MightyCore.
+[PlatformIO](http://platformio.org) is an open source ecosystem for IoT development and supports MegaCore.
 
 **See [PlatformIO.md](https://github.com/MCUdude/MegaCore/blob/master/PlatformIO.md) for more information.**
 

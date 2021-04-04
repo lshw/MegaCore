@@ -1,4 +1,4 @@
-/*-------------- Optiboot flasher example for the MegaCore -----------------|
+/*------------ Optiboot flasher example for the MightyCore -----------------|
  |                                                                          |
  | Created May 2016 by MCUdude, https://github.com/MCUdude                  |
  | Based on the work done by Marek Wodzinski, https://github.com/majekw     |
@@ -30,23 +30,13 @@
 
 // optiboot.h contains the functions that lets you read to
 // and write from the flash memory
-#include "optiboot.h"
-
+#include <optiboot.h>
 
 // Define the number of pages you want to write to here (limited by flash size)
 #define NUMBER_OF_PAGES 8
 
 // Define your termination and blank character here
 const char terminationChar = '@';
-
-// This is the character that gets printed if the memory block doesn't contain any data
-const char blankChar = '.';
-
-
-uint8_t charBuffer;
-uint8_t menuOption;
-uint16_t pageNumber;
-char returnToMenu;
 
 // The temporary data (data that's read or is about to get written) is stored here
 uint8_t ramBuffer[SPM_PAGESIZE];
@@ -55,7 +45,6 @@ uint8_t ramBuffer[SPM_PAGESIZE];
 const uint8_t flashSpace[SPM_PAGESIZE * NUMBER_OF_PAGES] __attribute__ (( aligned(SPM_PAGESIZE) )) PROGMEM = {
   "This some default content stored on page one"
 };
-
 
 
 void setup()
@@ -87,101 +76,108 @@ void loop()
   Serial.println(F("| 1. Show current flash content                  |"));
   Serial.println(F("| 2. Write to flash memory                       |"));
   Serial.println(F("|------------------------------------------------|"));
-  Serial.println();
 
+  // Static variables
+  static uint8_t charBuffer;
+  static char menuOption;
+  static uint16_t pageNumber;
+  static char returnToMenu;
 
   // Get menu option from the serial monitor
   do
   {
     while(!Serial.available());
-    menuOption = Serial.parseInt();
-    if(menuOption < 1 || menuOption > 2)
+    menuOption = Serial.read();
+    if(menuOption != '1' && menuOption != '2')
       Serial.print(F("\nPlease enter a valid option! "));
   }
-  while(menuOption < 1 || menuOption > 2);
+  while(menuOption != '1' && menuOption != '2');
 
-  Serial.print(F("Option "));
+  Serial.print(F("\nOption "));
   Serial.print(menuOption);
   Serial.println(F(" selected."));
 
 
 
   // Read flash option selected
-  if(menuOption == 1)
+  if(menuOption == '1')
   {
-    Serial.print(F("What page number do you want to read? Page: "));
+    Serial.print(F("Which page number do you want to read? Page 0 to "));
+    Serial.print(NUMBER_OF_PAGES - 1);
+    Serial.print(F(", Page "));
+    Serial.print(NUMBER_OF_PAGES);
+    Serial.print(F(" to show all pages: "));
 
     //Get page number from the serial monitor
     do
     {
       while(!Serial.available());
-      pageNumber = Serial.parseInt();
-      if(pageNumber < 1 || pageNumber > NUMBER_OF_PAGES)
+      pageNumber = Serial.read() - 0x30;
+      if(pageNumber > NUMBER_OF_PAGES)
       {
-        Serial.print(F("\nPlease enter a valid page between 1 and "));
-        Serial.print(NUMBER_OF_PAGES);
+        Serial.print(F("\nPlease enter a valid page between 0 and "));
+        Serial.print(NUMBER_OF_PAGES - 1);
         Serial.println(F(". The number of pages can be extended by changing NUMBER_OF_PAGES constant"));
       }
     }
     while(pageNumber > NUMBER_OF_PAGES);
 
-    if(pageNumber > 0)
+    if(pageNumber <= NUMBER_OF_PAGES)
       Serial.println(pageNumber);
 
     // READ SELECTED PAGE AND STORE THE CONTENT IN THE ramBuffer ARRAY
     // flash_buffer is where the data is stored (contains the memory addresses)
     // ramBuffer is where the data gets stored after reading from flash
     // pageNumber is the page the data is read from
-    // blankChar is the character that gets printed/stored if there are unused space (default '.')
-    // use optiboot_readPage(flashSpace, ramBuffer, pageNumber) if you don't want blank chars
 
-    if(pageNumber == 0) // Read all pages
+    uint8_t pageFirst = 0;
+    uint8_t pageLast = NUMBER_OF_PAGES;
+
+    if(pageNumber != NUMBER_OF_PAGES)
     {
-      Serial.println(F("\nAll flash content:"));
-      for(uint16_t page = 1; page < NUMBER_OF_PAGES+1; page++)
+      pageFirst = pageNumber;
+      pageLast = pageNumber;
+    }
+
+    for(uint8_t page = pageFirst; page < pageLast; page++)
+    {
+      optiboot_readPage(flashSpace, ramBuffer, page);
+      Serial.print(F("Page "));
+      Serial.print(page);
+      Serial.print(F(": "));
+      for(uint16_t i = 0; i < sizeof(ramBuffer); i++)
       {
-        Serial.print(F("Page "));
-        Serial.print(page);
-        Serial.print(F(": "));
-        optiboot_readPage(flashSpace, ramBuffer, page, blankChar);
-        Serial.println((char*)ramBuffer);
+        if(ramBuffer[i] == 0x00 || ramBuffer[i] == 0xff)
+          Serial.write('.');
+        else
+          Serial.write(ramBuffer[i]);
       }
+      Serial.println("");
     }
-    else // Read selected page
-    {
-      optiboot_readPage(flashSpace, ramBuffer, pageNumber, blankChar);
-
-      // Print page content
-      Serial.print(F("\nContent of page "));
-      Serial.print(pageNumber);
-      Serial.println(F(":"));
-      Serial.println((char*)ramBuffer);
-    }
-
   }  // End of flash read option
 
 
 
   // Write flash option selected
-  else if(menuOption == 2)
+  else if(menuOption == '2')
   {
     // Clear pageNumber
-    pageNumber = 0;
+    pageNumber = 0xff;
 
     //Get page number from the serial monitor
-    Serial.print(F("\nWhat page do you want to write to? Page: "));
+    Serial.print(F("\nWhich page do you want to write to? Page: "));
     do
     {
       while(!Serial.available());
-      pageNumber = Serial.parseInt();
-      if(pageNumber < 1 || pageNumber > NUMBER_OF_PAGES)
+      pageNumber = Serial.read() - 0x30;
+      if(pageNumber > NUMBER_OF_PAGES - 1)
       {
-        Serial.print(F("\nPlease enter a valid page between 1 and "));
-        Serial.print(NUMBER_OF_PAGES);
+        Serial.print(F("\nPlease enter a valid page between 0 and "));
+        Serial.print(NUMBER_OF_PAGES - 1);
         Serial.println(F(". The number of pages can be extended by changing NUMBER_OF_PAGES constant"));
       }
     }
-    while(pageNumber < 1 || pageNumber > NUMBER_OF_PAGES);
+    while(pageNumber >= NUMBER_OF_PAGES);
     Serial.println(pageNumber);
 
     // Print prompt to enter some new characters to write to flash
