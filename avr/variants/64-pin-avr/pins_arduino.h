@@ -16,10 +16,11 @@
 
 #include <avr/pgmspace.h>
 
+#define MEGACORE
+#define MCUDUDE_MEGACORE
 
 // Current pinout
 #define MEGACORE_64_PIN_AVR_PINOUT
-
 
 // Digital pins
 #if defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) || defined(__AVR_AT90CAN32__) \

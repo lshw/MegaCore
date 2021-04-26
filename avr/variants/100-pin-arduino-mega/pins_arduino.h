@@ -15,10 +15,11 @@
 
 #include <avr/pgmspace.h>
 
+#define MEGACORE
+#define MCUDUDE_MEGACORE
 
 // Current pinout
 #define MEGACORE_100_PIN_MEGA_PINOUT
-
 
 // Digital pins
 #define NUM_DIGITAL_PINS            (86)
