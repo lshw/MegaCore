@@ -368,12 +368,19 @@ menu.bootloader=Bootloader
 2560.menu.clock.8MHz_external.build.clock_speed={build.f_cpu}
 2560.menu.clock.8MHz_external.build.f_cpu=8000000L
 
-2560.menu.clock.7_3728MHz_external=External 7.3728 MHz
-2560.menu.clock.7_3728MHz_external.upload.speed=115200
-2560.menu.clock.7_3728MHz_external.bootloader.low_fuses=0xf7
-2560.menu.clock.7_3728MHz_external.build.clkpr=
-2560.menu.clock.7_3728MHz_external.build.clock_speed={build.f_cpu}
-2560.menu.clock.7_3728MHz_external.build.f_cpu=7372800L
+2560.menu.clock.7_3728MHz_external_115200=External 7.3728 MHz 115200
+2560.menu.clock.7_3728MHz_external_115200.upload.speed=115200
+2560.menu.clock.7_3728MHz_external_115200.bootloader.low_fuses=0xf7
+2560.menu.clock.7_3728MHz_external_115200.build.clkpr=
+2560.menu.clock.7_3728MHz_external_115200.build.clock_speed={build.f_cpu}
+2560.menu.clock.7_3728MHz_external_115200.build.f_cpu=7372800L
+
+2560.menu.clock.7_3728MHz_external_230400=External 7.3728 MHz 230400
+2560.menu.clock.7_3728MHz_external_230400.upload.speed=230400
+2560.menu.clock.7_3728MHz_external_230400.bootloader.low_fuses=0xf7
+2560.menu.clock.7_3728MHz_external_230400.build.clkpr=
+2560.menu.clock.7_3728MHz_external_230400.build.clock_speed={build.f_cpu}
+2560.menu.clock.7_3728MHz_external_230400.build.f_cpu=7372800L
 
 2560.menu.clock.4MHz_external=External 4 MHz
 2560.menu.clock.4MHz_external.upload.speed=9600
