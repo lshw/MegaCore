@@ -457,6 +457,12 @@ before_install:
   # Check for library issues that don't affect compilation
   - set_library_testing "true"
 
+  # Install a version of Arduino IDE with an outdated bundled arduino:avr platform to force installation of latest arduino:avr
+  - install_ide "1.8.12"
+
+  # Install Arduino AVR Boards to get the AVR toolchain
+  - install_package "arduino:avr"
+
   # Install MegaCore from the repository
   - install_package
 
